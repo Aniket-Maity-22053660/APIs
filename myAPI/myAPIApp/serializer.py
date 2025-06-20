@@ -4,6 +4,10 @@ from decimal import Decimal
 class MyBooksSerializer(serializers.ModelSerializer):
     stock = serializers.IntegerField(source="inventory")
     calculated_price = serializers.SerializerMethodField(method_name='calculate_tax')
+    category = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='title'
+    )
     class Meta:
         
         model = models.MyBooks
