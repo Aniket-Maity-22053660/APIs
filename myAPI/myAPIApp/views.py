@@ -6,6 +6,8 @@ from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.throttling import UserRateThrottle
+from rest_framework.throttling import AnonRateThrottle
 # Create your views here.
 
 
@@ -24,6 +26,7 @@ class MyBooksViewDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class MyBooksView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
+    throttle_classes = [UserRateThrottle, AnonRateThrottle]
 
     def user_in_group(self, user, group):
         return user.groups.filter(name=group).exists()
