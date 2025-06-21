@@ -24,8 +24,14 @@ class MyBooksViewDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class MyBooksView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-    
+
+    def user_in_group(self, user, group):
+        return user.groups.filter(name=group).exists()
+
     def list(self, request):
+
+        if not self.user_in_group(request.user, "Manager"):
+            return Response({'message' : 'Permission denied - You must be in manager group'})
         items = models.MyBooks.objects.all()
         inventory = request.query_params.get('stock')
         category = request.query_params.get('category')
